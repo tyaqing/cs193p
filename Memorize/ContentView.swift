@@ -9,10 +9,11 @@ import CoreData
 import SwiftUI
 
 struct ContentView: View {
+	var emojis = ["📷", "🍌", "🍇", "👻"]
 	var body: some View {
 		HStack {
-			ForEach(0 ..< 4) { index in
-				CardView(isFaceUp: index % 2 == 0)
+			ForEach(emojis, id: \.self) { emoji in
+				CardView(content: emoji, isFaceUp: false)
 			}
 		}
 		.padding(.horizontal)
@@ -21,31 +22,27 @@ struct ContentView: View {
 }
 
 struct CardView: View {
-	var isFaceUp: Bool
+	var content: String 
+	@State var isFaceUp: Bool
 
 	var body: some View {
 		ZStack(alignment: .center) {
+			let shape = RoundedRectangle(cornerRadius: 20)
 			if isFaceUp {
-				RoundedRectangle(cornerRadius: 20)
-					.fill()
-					.foregroundColor(.white)
-				RoundedRectangle(cornerRadius: 20)
-					.stroke(lineWidth: 3)
-				Text("👻")
-					.font(.largeTitle)
+				shape.fill().foregroundColor(.white)
+				shape.stroke(lineWidth: 3)
+				Text(content).font(.largeTitle)
 			} else {
-				RoundedRectangle(cornerRadius: 20)
-					.fill()
+				shape.fill()
 			}
+		}.onTapGesture {
+			isFaceUp.toggle()
 		}
 	}
 }
 
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
-		ContentView()
-			.preferredColorScheme(.dark)
-			.previewDevice("iPhone 14")
 		ContentView()
 			.preferredColorScheme(.light)
 			.previewDevice("iPhone 14")
