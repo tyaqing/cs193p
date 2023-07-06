@@ -1,23 +1,20 @@
-//
-//  ContentView.swift
-//  Memorize
-//
-//  Created by yakir on 2023/7/4.
-//
-
 import CoreData
 import SwiftUI
 
 struct ContentView: View {
-	var emojis = ["🚗", "🚕", "🚙", "🚌", "🚎", "🏎", "🚓", "🚑", "🚒", "🚐", "🛻", "🚚", "🚛", "🚜", "🛵", "🏍", "🛺", "🚲", "🛴", "🚔", "🚍", "🚘", "🚖"]
 	@State var emojiCount = 8
+	@ObservedObject var viewModel: EmojiMemoryGame
+
 	var body: some View {
 		VStack {
 			ScrollView {
 				LazyVGrid(columns: [GridItem(.adaptive(minimum: 70))]) {
-					ForEach(emojis[0 ..< emojiCount], id: \.self) { emoji in
-						CardView(content: emoji, isFaceUp: true)
+					ForEach(viewModel.cards) { card in
+						CardView(card: card)
 							.aspectRatio(2 / 3, contentMode: .fit)
+							.onTapGesture {
+								viewModel.choose(card)
+							}
 					}
 				}
 			}
@@ -36,7 +33,7 @@ struct ContentView: View {
 
 	var add: some View {
 		Button {
-			if emojiCount < emojis.count {
+			if emojiCount < viewModel.cards.count {
 				emojiCount += 1
 			}
 		} label: {
@@ -56,28 +53,25 @@ struct ContentView: View {
 }
 
 struct CardView: View {
-	var content: String
-	@State var isFaceUp: Bool
-
+	var card: MemorizeGame<String>.Card
 	var body: some View {
 		ZStack(alignment: .center) {
 			let shape = RoundedRectangle(cornerRadius: 20)
-			if isFaceUp {
+			if card.isFaceUp {
 				shape.fill().foregroundColor(.white)
 				shape.strokeBorder(lineWidth: 3)
-				Text(content).font(.largeTitle)
+				Text(card.content).font(.largeTitle)
 			} else {
 				shape.fill()
 			}
-		}.onTapGesture {
-			isFaceUp.toggle()
 		}
 	}
 }
 
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
-		ContentView()
+		let game = EmojiMemoryGame()
+		ContentView(viewModel: game)
 			.preferredColorScheme(.light)
 			.previewDevice("iPhone 14")
 	}
