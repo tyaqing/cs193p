@@ -13,22 +13,25 @@ struct ContentView: View {
 	@State var emojiCount = 6
 	var body: some View {
 		VStack {
-			HStack {
-				ForEach(emojis[0 ..< emojiCount], id: \.self) { emoji in
-					CardView(content: emoji, isFaceUp: false)
+			ScrollView {
+				LazyVGrid(columns: [GridItem(.adaptive(minimum: 70))]) {
+					ForEach(emojis[0 ..< emojiCount], id: \.self) { emoji in
+						CardView(content: emoji, isFaceUp: true)
+							.aspectRatio(2 / 3, contentMode: .fit)
+					}
 				}
 			}
-			.padding(.horizontal)
 			.foregroundColor(/*@START_MENU_TOKEN@*/ .red/*@END_MENU_TOKEN@*/)
+
 			Spacer()
 			HStack {
 				add
 				Spacer()
 				remove
-
-			}.padding(.horizontal)
-				.font(.largeTitle)
+			}
+			.font(.largeTitle)
 		}
+		.padding(.horizontal)
 	}
 
 	var add: some View {
@@ -61,7 +64,7 @@ struct CardView: View {
 			let shape = RoundedRectangle(cornerRadius: 20)
 			if isFaceUp {
 				shape.fill().foregroundColor(.white)
-				shape.stroke(lineWidth: 3)
+				shape.strokeBorder(lineWidth: 3)
 				Text(content).font(.largeTitle)
 			} else {
 				shape.fill()
