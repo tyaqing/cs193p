@@ -5,19 +5,12 @@ struct MemorizeGame<CardContent> {
 	private(set) var cards: [Card]
 
 	mutating func choose(_ card: Card) {
-		let chosenIndex = index(of: card)
-		cards[chosenIndex].isFaceUp.toggle()
-
-		print("chosenCard= \(chosenIndex)")
-	}
-
-	func index(of card: Card) -> Int {
-		for index in 0 ..< cards.count {
-			if cards[index].id == card.id {
-				return index
-			}
+		if let chosenIndex = cards.firstIndex(where: { $0.id == card.id
+		}) {
+			cards[chosenIndex].isFaceUp.toggle()
+			print("chosenCard= \(chosenIndex)")
 		}
-		return 0
+		print("card not found")
 	}
 
 	init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
