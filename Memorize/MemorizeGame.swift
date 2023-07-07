@@ -4,7 +4,10 @@ import Foundation
 struct MemorizeGame<CardContent> where CardContent: Equatable {
 	private(set) var cards: [Card]
 
-	private var faceUpCardIndex: Int?
+	private var faceUpCardIndex: Int? {
+		get { cards.indices.filter { cards[$0].isFaceUp }.onAndOnly }
+		set { cards.indices.forEach { cards[$0].isFaceUp = ($0 == newValue) } }
+	}
 
 	// mutating 表示这个函数可以访问并修改数据
 	mutating func choose(_ card: Card) {
@@ -18,15 +21,10 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
 					cards[chosenIndex].isMatched = true
 					cards[potentialMatchIndex].isMatched = true
 				}
-				faceUpCardIndex = nil
+				cards[chosenIndex].isFaceUp = true
 			} else {
-				for index in cards.indices {
-					cards[index].isFaceUp = false
-				}
 				faceUpCardIndex = chosenIndex
 			}
-			// 这里必须修改原来的实例,如果赋值,会有值的复制
-			cards[chosenIndex].isFaceUp.toggle()
 		}
 		print("card not found")
 	}
@@ -47,5 +45,16 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
 		var isMatched = false
 		let content: CardContent
 		let id: Int
+	}
+}
+
+// 拓展Array
+extension Array {
+	var onAndOnly: Element? {
+		if count == 1 {
+			return first
+		} else {
+			return nil
+		}
 	}
 }
