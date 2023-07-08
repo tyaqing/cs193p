@@ -4,24 +4,35 @@ import SwiftUI
 struct EmojiMemoryGameView: View {
 	@ObservedObject var game: EmojiMemoryGame
 	var body: some View {
-		AspectVGrid(items: game.cards, aspectRatio: 2 / 3) { card in
-			cardView(for: card)
+		VStack {
+			gameBody
+			shuffle
 		}
-		.foregroundColor(/*@START_MENU_TOKEN@*/ .red/*@END_MENU_TOKEN@*/)
-		.padding(.horizontal)
+		.padding()
 	}
 
-	// 初步理解就是外层直接带逻辑需要声明这是个ViewBuilder
-	@ViewBuilder
-	private func cardView(for card: EmojiMemoryGame.Card) -> some View {
-		if card.isMatched, !card.isFaceUp {
-			Rectangle().opacity(0)
-		} else {
-			CardView(card: card)
-				.padding(4)
-				.onTapGesture {
-					game.choose(card)
-				}
+	var gameBody: some View {
+		AspectVGrid(items: game.cards, aspectRatio: 2 / 3) { card in
+			if card.isMatched, !card.isFaceUp {
+				Color.clear
+			} else {
+				CardView(card: card)
+					.padding(4)
+					.onTapGesture {
+						withAnimation {
+							game.choose(card)
+						}
+					}
+			}
+		}
+		.foregroundColor(/*@START_MENU_TOKEN@*/ .red/*@END_MENU_TOKEN@*/)
+	}
+
+	var shuffle: some View {
+		Button("Shuffle") {
+			withAnimation {
+				game.shuffle()
+			}
 		}
 	}
 }

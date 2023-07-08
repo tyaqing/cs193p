@@ -2,19 +2,24 @@ import SwiftUI
 
 // ViewModifier 的写法有点类似于vue中的slot 将内容包裹在Card里面
 struct Cardify: ViewModifier {
-	var isFaceUp: Bool
+	init(isFaceUp: Bool) {
+		rotation = isFaceUp ? 0 : 180
+	}
+
+	var rotation: Double
 	func body(content: Content) -> some View {
 		ZStack {
 			let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
-			if self.isFaceUp {
+			if rotation < 90 {
 				shape.fill().foregroundColor(.white)
 				shape.strokeBorder(lineWidth: DrawingConstants.lineWidth)
 			} else {
 				shape.fill()
 			}
 			content
-				.opacity(self.isFaceUp ? 1 : 0)
+				.opacity(rotation < 90 ? 1 : 0)
 		}
+		.rotation3DEffect(Angle.degrees(rotation), axis: (0, 1, 0))
 	}
 
 	private enum DrawingConstants {
@@ -25,6 +30,6 @@ struct Cardify: ViewModifier {
 
 extension View {
 	func cardify(isFaceUp: Bool) -> some View {
-		self.modifier(Cardify(isFaceUp: isFaceUp))
+		modifier(Cardify(isFaceUp: isFaceUp))
 	}
 }

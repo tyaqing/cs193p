@@ -29,6 +29,10 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
 		print("card not found")
 	}
 
+	mutating func shuffle() {
+		cards.shuffle()
+	}
+
 	init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
 		cards = []
 		for pairIndex in 0 ..< numberOfPairsOfCards {
@@ -37,6 +41,7 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
 				cards.append(Card(content: content, id: pairIndex * 2 + index))
 			}
 		}
+		cards.shuffle()
 	}
 
 	// Identifiable 协议可以让遍历无需指定id
