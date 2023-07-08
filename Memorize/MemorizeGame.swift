@@ -40,7 +40,7 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
 	}
 
 	// Identifiable 协议可以让遍历无需指定id
-	struct Card: Identifiable {
+	struct Card: Identifiable, Equatable {
 		var isFaceUp = false
 		var isMatched = false
 		let content: CardContent

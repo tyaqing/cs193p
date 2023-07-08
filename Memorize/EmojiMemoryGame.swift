@@ -7,7 +7,7 @@ class EmojiMemoryGame: ObservableObject {
 	private static var emojis = ["🚗", "🚕", "🚙", "🚌", "🚎", "🏎", "🚓", "🚑", "🚒", "🚐", "🛻", "🚚", "🚛", "🚜", "🛵", "🏍", "🛺", "🚲", "🛴", "🚔", "🚍", "🚘", "🚖"]
 	
 	private static func createMemoryGame() -> MemorizeGame<String> {
-		return MemorizeGame(numberOfPairsOfCards: 4) {
+		return MemorizeGame(numberOfPairsOfCards: 10) {
 			index in EmojiMemoryGame.emojis[index]
 		}
 	}
@@ -26,11 +26,5 @@ class EmojiMemoryGame: ObservableObject {
 	
 	func choose(_ card: Card) {
 		model.choose(card)
-	}
-}
-
-struct Previews_EmojiMemoryGame_Previews: PreviewProvider {
-	static var previews: some View {
-		/*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
 	}
 }
