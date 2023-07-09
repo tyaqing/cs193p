@@ -1,9 +1,14 @@
 import SwiftUI
 
 // ViewModifier 的写法有点类似于vue中的slot 将内容包裹在Card里面
-struct Cardify: ViewModifier {
+struct Cardify: AnimatableModifier {
 	init(isFaceUp: Bool) {
 		rotation = isFaceUp ? 0 : 180
+	}
+
+	var animatableData: Double {
+		get { rotation }
+		set { rotation = newValue }
 	}
 
 	var rotation: Double
